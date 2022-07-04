@@ -16,6 +16,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 app.use(express.json());
 
+// app.get('/api/get', (req,res) => {
+//     const sqlSelect = "SELECT COUNT(id) FROM documents;"
+//     db.query(sqlSelect, (err, result)=> {
+//         // res.send(result);
+//         console.log(result);
+//     });
+// });
+
 app.get('/api/get', (req,res) => {
     const sqlSelect = "SELECT * FROM documents;"
     db.query(sqlSelect, (err, result)=> {
@@ -29,12 +37,18 @@ app.post("/api/insert", (req, res)=> {
     const receiverName = req.body.receiverName;
     const senderOffice = req.body.senderOffice;
     const receiverOffice = req.body.receiverOffice;
-    const referenceNo = date.format(now, 'YYYYMMDD');
+    let queryLastId = "SELECT * FROM documents";
+    // let length = queryLastId.length;
 
-    const sqlInsert = "INSERT INTO documents (referenceNo, senderName, receiverName, senderOffice, receiverOffice, created_at) VALUES (?,?,?,?,?, NOW());"
-
-    db.query(sqlInsert, [referenceNo, senderName, receiverName, senderOffice, receiverOffice], (err, result)=> {
-        console.log(result);
+    db.query(queryLastId, (err, result)=> {
+        const data = date.format(now, 'YYYYMMDD');
+        const length = result.length;
+        const referenceNo =  data + "00" + length;
+        const sqlInsert = "INSERT INTO documents (referenceNo, senderName, receiverName, senderOffice, receiverOffice, created_at) VALUES (?,?,?,?,?, NOW());"
+        console.log(result.length);
+        db.query(sqlInsert, [referenceNo, senderName, receiverName, senderOffice, receiverOffice], (err, result)=> {
+            console.log(result);
+        });
     });
 });
 
