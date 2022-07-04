@@ -47,7 +47,7 @@ app.post("/api/insert", (req, res)=> {
 
     db.query(queryLastId, (err, result)=> {
         const data = date.format(now, 'YYYYMMDD');
-        const length = result.length;
+        const length = result.length + 1;
         const referenceNo =  data + "00" + length;
         const sqlInsert = "INSERT INTO documents (referenceNo, senderName, receiverName, senderOffice, receiverOffice, created_at) VALUES (?,?,?,?,?, NOW());"
         console.log(result.length);
