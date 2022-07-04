@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const mysql = require('mysql');
 const cors = require('cors');
+const date = require('date-and-time');
 
 const db = mysql.createPool({
     host: "localhost",
@@ -23,14 +24,16 @@ app.get('/api/get', (req,res) => {
 });
 
 app.post("/api/insert", (req, res)=> {
+    const now = new Date();
     const senderName = req.body.senderName;
     const receiverName = req.body.receiverName;
     const senderOffice = req.body.senderOffice;
     const receiverOffice = req.body.receiverOffice;
+    const referenceNo = date.format(now, 'YYYYMMDD');
 
-    const sqlInsert = "INSERT INTO documents (referenceNo, senderName, receiverName, senderOffice, receiverOffice, created_at) VALUES ('12123512',?,?,?,?, NOW());"
+    const sqlInsert = "INSERT INTO documents (referenceNo, senderName, receiverName, senderOffice, receiverOffice, created_at) VALUES (?,?,?,?,?, NOW());"
 
-    db.query(sqlInsert, [senderName, receiverName, senderOffice, receiverOffice], (err, result)=> {
+    db.query(sqlInsert, [referenceNo, senderName, receiverName, senderOffice, receiverOffice], (err, result)=> {
         console.log(result);
     });
 });
