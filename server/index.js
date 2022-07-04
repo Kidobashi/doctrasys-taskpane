@@ -27,7 +27,12 @@ app.use(express.json());
 app.get('/api/get', (req,res) => {
     const sqlSelect = "SELECT * FROM documents;"
     db.query(sqlSelect, (err, result)=> {
-        res.send(result);
+        const now = new Date();
+        const data = date.format(now, 'YYYYMMDD');
+        const length = result.length;
+        const referenceNo =  data + "00" + length;
+        res.send(referenceNo);
+        console.log(referenceNo);
     });
 });
 
